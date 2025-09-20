@@ -1,0 +1,27 @@
+name: Streak
+on:
+  schedule:
+  - cron: '0 9 * * *' # every day at morning 9
+
+  push:
+      branches: [ "main" ]
+  pull_request:
+      branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run commit script
+        run: |
+           git config --global user.name ${GITHUB_ACTOR}
+           git config --global user.email ${{ secrets.USER_EMAIL }}
+           git commit --allow-empty -m "Streak grass: `date +'%Y-%m-%d %H:%M:%S'`" 
+           git push origin main
